@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import ReactJson from "react-json-view";
+import JsonView from "react18-json-view";
+import "react18-json-view/src/style.css";
 
 function JsonViewer({ data }) {
   const [copied, setCopied] = useState(false);
@@ -49,13 +50,7 @@ function JsonViewer({ data }) {
       </button>
 
       {isJson ? (
-        <ReactJson
-          src={data}
-          theme="monokai"
-          collapsed={2}
-          enableClipboard={false}
-          displayDataTypes={false}
-          displayObjectSize={true}
+        <div
           style={{
             background: "#111827",
             padding: "16px",
@@ -63,7 +58,20 @@ function JsonViewer({ data }) {
             fontSize: "13px",
             fontFamily: "monospace",
           }}
-        />
+        >
+          <JsonView
+            src={data}
+            theme="a11y"
+            dark={true}
+            collapsed={2}
+            enableClipboard={false}
+            displaySize={true}
+            style={{
+              background: "transparent",
+              fontSize: "13px",
+            }}
+          />
+        </div>
       ) : (
         <pre
           style={{
