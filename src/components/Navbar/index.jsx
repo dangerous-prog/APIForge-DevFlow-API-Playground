@@ -1,10 +1,10 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Zap, Moon, Sun, ExternalLink, Download, Upload } from "lucide-react";
+import { Zap, Moon, Sun, ExternalLink, Download, Upload, Save } from "lucide-react";
 import useAppStore from "../../store/useAppStore";
 import "./Navbar.css";
 
-function Navbar() {
+function Navbar({ onQuickSave }) {
   const darkMode = useAppStore((s) => s.darkMode);
   const toggleDarkMode = useAppStore((s) => s.toggleDarkMode);
   const exportData = useAppStore((s) => s.exportData);
@@ -60,6 +60,15 @@ function Navbar() {
       <div className="navbar-right">
         {isPlayground && (
           <>
+            <button
+              className="navbar-btn"
+              onClick={onQuickSave}
+              title="Save Request"
+              id="quick-save-btn"
+            >
+              <Save size={16} />
+              <span className="navbar-btn-label">Save</span>
+            </button>
             <button
               className="navbar-btn"
               onClick={handleImport}

@@ -18,6 +18,11 @@ function HeaderTable({ headers, onChange }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      {headers.length === 0 && (
+        <div style={{ color: "#6b7280", fontSize: "13px", fontStyle: "italic", padding: "4px 0" }}>
+          No headers configured.
+        </div>
+      )}
       {headers.map((row, index) => (
         <div
           key={index}

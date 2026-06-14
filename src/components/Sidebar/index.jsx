@@ -60,6 +60,7 @@ function Sidebar({ onLoadRequest }) {
   const tabs = [
     { key: "collections", label: "Collections", icon: FolderOpen },
     { key: "history", label: "History", icon: Clock },
+    { key: "favorites", label: "Favorites", icon: Star },
     { key: "environments", label: "Env", icon: Globe },
     { key: "mocks", label: "Mocks", icon: Server },
   ];
@@ -101,6 +102,15 @@ function Sidebar({ onLoadRequest }) {
             history={history}
             clearHistory={clearHistory}
             removeFromHistory={removeFromHistory}
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
+            onLoadRequest={onLoadRequest}
+          />
+        )}
+        {sidebarTab === "favorites" && (
+          <FavoritesPanel
+            history={history}
+            collections={collections}
             favorites={favorites}
             toggleFavorite={toggleFavorite}
             onLoadRequest={onLoadRequest}
@@ -467,6 +477,89 @@ function HistoryPanel({
                   }}
                 >
                   <X size={12} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════ */
+/*            FAVORITES PANEL             */
+/* ═══════════════════════════════════════ */
+function FavoritesPanel({
+  history,
+  collections,
+  favorites,
+  toggleFavorite,
+  onLoadRequest,
+}) {
+  const favRequests = [];
+  
+  collections.forEach(col => {
+    col.requests.forEach(req => {
+      if (favorites.includes(req.id)) {
+        favRequests.push({ ...req, _source: `Collection: ${col.name}` });
+      }
+    });
+  });
+
+  history.forEach(req => {
+    if (favorites.includes(req.id)) {
+      favRequests.push({ ...req, _source: "History" });
+    }
+  });
+
+  return (
+    <div className="sidebar-panel">
+      <div className="panel-header">
+        <span className="panel-title">Favorites</span>
+      </div>
+
+      {favRequests.length === 0 ? (
+        <div className="empty-state">
+          <Star size={28} className="empty-icon" />
+          <p>No favorites</p>
+          <span>Star a request to see it here</span>
+        </div>
+      ) : (
+        <div className="panel-list">
+          {favRequests.map((entry) => (
+            <div
+              key={entry.id}
+              className="request-item"
+              onClick={() =>
+                onLoadRequest &&
+                onLoadRequest({
+                  method: entry.method,
+                  url: entry.url,
+                  headers: entry.headers,
+                  body: entry.body,
+                })
+              }
+            >
+              <span
+                className="method-badge"
+                style={{ color: METHOD_COLORS[entry.method] || "#6b7280" }}
+              >
+                {entry.method}
+              </span>
+              <div className="request-info">
+                <span className="request-url">{entry.url}</span>
+                <span className="request-meta">{entry._source}</span>
+              </div>
+              <div className="request-actions">
+                <button
+                  className="icon-btn-tiny"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(entry.id);
+                  }}
+                >
+                  <Star size={12} fill="#f59e0b" color="#f59e0b" />
                 </button>
               </div>
             </div>

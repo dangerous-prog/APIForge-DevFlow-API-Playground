@@ -34,7 +34,7 @@ function BodyEditor({ body, onChange, method }) {
         height="200px"
         language="json"
         theme="vs-dark"
-        value={body}
+        value={body || "{\n  \n}"}
         onChange={(value) => onChange(value || "")}
         options={{
           minimap: { enabled: false },

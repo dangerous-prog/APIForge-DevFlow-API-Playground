@@ -332,6 +332,9 @@ function RequestBuilder() {
         <span className="rb-env-hint">
           Use {"{{VAR}}"} in URL or headers
         </span>
+        <span className="rb-env-hint" style={{ marginLeft: "auto" }}>
+          Tip: prefix with <code style={{background: "rgba(255,255,255,0.1)", padding: "2px 4px", borderRadius: "4px"}}>mock://</code> to hit local mocks
+        </span>
       </div>
 
       {/* ── AI Auto-Fill Suggestion ── */}

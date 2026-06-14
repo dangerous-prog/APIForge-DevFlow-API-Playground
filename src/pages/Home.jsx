@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Zap,
@@ -54,6 +54,32 @@ const FEATURES = [
 ];
 
 function Home() {
+  const [typedUrl, setTypedUrl] = useState("");
+  const [step, setStep] = useState(0);
+
+  const fullUrl = "https://api.example.com/users";
+
+  useEffect(() => {
+    let timeout;
+    if (step === 0) {
+      if (typedUrl.length < fullUrl.length) {
+        timeout = setTimeout(() => {
+          setTypedUrl(fullUrl.slice(0, typedUrl.length + 1));
+        }, 50);
+      } else {
+        timeout = setTimeout(() => setStep(1), 600);
+      }
+    } else if (step === 1) {
+      timeout = setTimeout(() => setStep(2), 800);
+    } else if (step === 2) {
+      timeout = setTimeout(() => {
+        setStep(0);
+        setTypedUrl("");
+      }, 5000);
+    }
+    return () => clearTimeout(timeout);
+  }, [step, typedUrl, fullUrl]);
+
   return (
     <div className="home" id="home-page">
       {/* ── Hero ── */}
@@ -111,22 +137,29 @@ function Home() {
               <div className="mockup-request">
                 <span className="mock-method">GET</span>
                 <span className="mock-url">
-                  https://api.example.com/users
+                  {typedUrl}
+                  {step === 0 && <span style={{ opacity: 0.7 }}>|</span>}
                 </span>
-                <span className="mock-send">Send →</span>
+                <span className="mock-send" style={{ opacity: step === 1 ? 0.5 : 1 }}>
+                  {step === 1 ? "Sending..." : "Send →"}
+                </span>
               </div>
-              <div className="mockup-response">
-                <span className="mock-status">200 OK</span>
-                <span className="mock-time">124ms</span>
-                <span className="mock-size">2.4 KB</span>
-              </div>
-              <pre className="mockup-json">{`{
+              {step === 2 && (
+                <>
+                  <div className="mockup-response">
+                    <span className="mock-status">200 OK</span>
+                    <span className="mock-time">124ms</span>
+                    <span className="mock-size">2.4 KB</span>
+                  </div>
+                  <pre className="mockup-json">{`{
   "users": [
     { "id": 1, "name": "Ada Lovelace" },
     { "id": 2, "name": "Alan Turing" }
   ],
   "total": 2
 }`}</pre>
+                </>
+              )}
             </div>
           </div>
         </div>
