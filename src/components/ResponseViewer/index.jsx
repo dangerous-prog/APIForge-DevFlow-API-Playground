@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import JsonViewer from "../JsonViewer";
 
 function ResponseViewer({ response, loading }) {
+  const [searchTerm, setSearchTerm] = useState("");
+
   if (loading) {
     return (
       <div
@@ -55,6 +57,33 @@ function ResponseViewer({ response, loading }) {
 
   const sizeKb = (response.size / 1024).toFixed(2);
 
+  // Filter JSON based on search term
+  const filterData = (data, term) => {
+    if (!term.trim()) return data;
+    if (typeof data !== "object" || data === null) return data;
+
+    const lower = term.toLowerCase();
+
+    if (Array.isArray(data)) {
+      return data.filter((item) =>
+        JSON.stringify(item).toLowerCase().includes(lower)
+      );
+    }
+
+    const filtered = {};
+    Object.entries(data).forEach(([key, value]) => {
+      if (
+        key.toLowerCase().includes(lower) ||
+        String(value).toLowerCase().includes(lower)
+      ) {
+        filtered[key] = value;
+      }
+    });
+    return Object.keys(filtered).length > 0 ? filtered : null;
+  };
+
+  const filteredData = filterData(response.data, searchTerm);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
       {/* Status Ribbon */}
@@ -102,10 +131,45 @@ function ResponseViewer({ response, loading }) {
         >
           📦 {sizeKb}KB
         </span>
+
+        {/* Search Bar */}
+        <div style={{ marginLeft: "auto" }}>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="🔍 Search response..."
+            style={{
+              background: "#1f2937",
+              border: "1px solid #374151",
+              color: "#f9fafb",
+              padding: "4px 12px",
+              borderRadius: "20px",
+              fontSize: "12px",
+              outline: "none",
+              width: "180px",
+            }}
+          />
+        </div>
       </div>
 
       {/* Response Body */}
-      <JsonViewer data={response.data} />
+      {filteredData !== null ? (
+        <JsonViewer data={filteredData} />
+      ) : (
+        <div
+          style={{
+            padding: "16px",
+            color: "#6b7280",
+            fontSize: "13px",
+            textAlign: "center",
+            background: "#111827",
+            borderRadius: "8px",
+          }}
+        >
+          No results found for "{searchTerm}"
+        </div>
+      )}
     </div>
   );
 }
