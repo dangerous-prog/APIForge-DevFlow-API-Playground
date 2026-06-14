@@ -1,0 +1,345 @@
+/* ===== Mock Manager ===== */
+
+.mock-manager {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mock-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.mock-header-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.mock-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.mock-add-btn:hover {
+  background: var(--accent-subtle);
+  color: var(--accent);
+}
+
+.mock-hint {
+  padding: 10px 14px;
+  font-size: 11px;
+  color: var(--text-dimmed);
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.mock-hint code {
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+/* ── New Form ── */
+.mock-new-form {
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeIn 0.2s ease;
+}
+
+.mock-form-row {
+  display: flex;
+  gap: 8px;
+}
+
+.mock-form-row.small {
+  gap: 12px;
+}
+
+.mock-form-method {
+  width: 80px;
+  background: var(--bg-main);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+}
+
+.mock-form-path {
+  flex: 1;
+  background: var(--bg-main);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  outline: none;
+}
+
+.mock-form-path:focus,
+.mock-form-desc:focus,
+.mock-form-input:focus {
+  border-color: var(--accent);
+}
+
+.mock-form-desc {
+  flex: 1;
+  background: var(--bg-main);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 12px;
+  outline: none;
+}
+
+.mock-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.mock-form-field label {
+  font-size: 10px;
+  color: var(--text-dimmed);
+  text-transform: uppercase;
+}
+
+.mock-form-input {
+  background: var(--bg-main);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 12px;
+  outline: none;
+}
+
+.mock-form-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.mock-form-editor label {
+  font-size: 10px;
+  color: var(--text-dimmed);
+  text-transform: uppercase;
+}
+
+.mock-editor-wrapper {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.mock-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.mock-cancel {
+  padding: 6px 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+}
+
+.mock-cancel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+}
+
+.mock-save {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  transition: background var(--transition-fast);
+}
+
+.mock-save:hover {
+  background: var(--accent-hover);
+}
+
+/* ── List ── */
+.mock-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-dimmed);
+  flex: 1;
+}
+
+.mock-empty p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.mock-empty span {
+  font-size: 11px;
+}
+
+.mock-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.mock-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  background: var(--bg-main);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.mock-item:hover {
+  border-color: var(--border-light);
+}
+
+.mock-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  background: var(--bg-surface);
+}
+
+.mock-item-chevron {
+  color: var(--text-dimmed);
+  display: flex;
+}
+
+.mock-item-method {
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  width: 36px;
+}
+
+.mock-item-path {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mock-item-status {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--success);
+  background: rgba(34, 197, 94, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.mock-item-actions {
+  display: flex;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.mock-item:hover .mock-item-actions {
+  opacity: 1;
+}
+
+.mock-item-details {
+  padding: 12px;
+  background: var(--bg-main);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeIn 0.2s ease;
+}
+
+.mock-item-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.mock-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.mock-detail-label {
+  color: var(--text-dimmed);
+}
+
+.mock-detail-sep {
+  color: var(--border-light);
+}
+
+.mock-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mock-body-label {
+  font-size: 10px;
+  color: var(--text-dimmed);
+  text-transform: uppercase;
+}
+
+.mock-body-code {
+  background: var(--bg-surface);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: #86efac;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

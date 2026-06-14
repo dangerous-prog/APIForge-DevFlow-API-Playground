@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import RequestBuilder from "../components/RequestBuilder";
@@ -6,34 +6,34 @@ import useAppStore from "../store/useAppStore";
 import "./Playground.css";
 
 function Playground() {
-  const { collections, saveToCollection, addCollection } = useAppStore();
-
-  // Track the "loaded" request from sidebar clicks
-  // Person B's RequestBuilder is self-contained (has its own state),
-  // but we can reload it by changing its key to force a remount.
-  const [loadedRequest, setLoadedRequest] = useState(null);
-  const [builderKey, setBuilderKey] = useState(0);
-
-  const handleLoadRequest = useCallback((req) => {
-    setLoadedRequest(req);
-    setBuilderKey((k) => k + 1);
-  }, []);
+  const { collections, saveToCollection, addCollection, activeRequest, loadRequestIntoBuilder } = useAppStore();
 
   // Quick-save popup state
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [saveTarget, setSaveTarget] = useState("");
   const [newCollectionName, setNewCollectionName] = useState("");
 
+  const handleLoadRequest = (req) => {
+    loadRequestIntoBuilder(req);
+  };
+
   const handleQuickSave = () => {
     setShowSaveModal(true);
   };
 
   const confirmSave = () => {
+    const reqData = {
+      method: activeRequest.method,
+      url: activeRequest.url,
+      headers: activeRequest.headers,
+      body: activeRequest.body,
+    };
+
     if (saveTarget === "__new__" && newCollectionName.trim()) {
       const id = addCollection(newCollectionName.trim());
-      if (loadedRequest) saveToCollection(id, loadedRequest);
+      saveToCollection(id, reqData);
     } else if (saveTarget) {
-      if (loadedRequest) saveToCollection(saveTarget, loadedRequest);
+      saveToCollection(saveTarget, reqData);
     }
     setShowSaveModal(false);
     setSaveTarget("");
@@ -42,11 +42,11 @@ function Playground() {
 
   return (
     <div className="playground" id="playground-page">
-      <Navbar />
+      <Navbar onQuickSave={handleQuickSave} />
       <div className="playground-body">
         <Sidebar onLoadRequest={handleLoadRequest} />
         <main className="playground-main" id="workspace-main">
-          <RequestBuilder key={builderKey} />
+          <RequestBuilder />
         </main>
       </div>
 

@@ -38,6 +38,88 @@ const useAppStore = create(
       // Dark mode (always on for Silent Coder, but toggleable)
       darkMode: true,
 
+      // Active Request State — the workspace form
+      activeRequest: {
+        method: "GET",
+        url: "",
+        headers: [
+          { key: "Content-Type", value: "application/json", enabled: true },
+        ],
+        queryParams: [{ key: "", value: "", enabled: true }],
+        authType: "none", // none | bearer | apikey
+        authToken: "",
+        authApiKey: { key: "X-API-Key", value: "", addTo: "header" },
+        body: "",
+        response: null,
+        loading: false,
+        error: null,
+        activeTab: "params",
+      },
+
+      // Mocks: local user-defined mock API endpoints
+      mocks: [],
+
+      /* ───────── Active Request Actions ───────── */
+
+      updateActiveField: (field, value) =>
+        set((state) => ({
+          activeRequest: { ...state.activeRequest, [field]: value },
+        })),
+
+      loadRequestIntoBuilder: (request) =>
+        set((state) => ({
+          activeRequest: {
+            ...state.activeRequest,
+            method: request.method || "GET",
+            url: request.url || "",
+            headers: request.headers || [
+              { key: "Content-Type", value: "application/json", enabled: true },
+            ],
+            queryParams: request.queryParams || [
+              { key: "", value: "", enabled: true },
+            ],
+            body: request.body || "",
+            response: null,
+            error: null,
+            loading: false,
+          },
+        })),
+
+      setActiveResponse: (response) =>
+        set((state) => ({
+          activeRequest: { ...state.activeRequest, response, error: null },
+        })),
+
+      setActiveLoading: (loading) =>
+        set((state) => ({
+          activeRequest: { ...state.activeRequest, loading },
+        })),
+
+      setActiveError: (error) =>
+        set((state) => ({
+          activeRequest: { ...state.activeRequest, error, response: null },
+        })),
+
+      resetActiveRequest: () =>
+        set({
+          activeRequest: {
+            method: "GET",
+            url: "",
+            headers: [
+              { key: "Content-Type", value: "application/json", enabled: true },
+            ],
+            queryParams: [{ key: "", value: "", enabled: true }],
+            authType: "none",
+            authToken: "",
+            authApiKey: { key: "X-API-Key", value: "", addTo: "header" },
+            body: "",
+            response: null,
+            loading: false,
+            error: null,
+            activeTab: "params",
+          },
+        }),
+
       /* ───────── History Actions ───────── */
 
       addToHistory: (request) => {
@@ -178,6 +260,64 @@ const useAppStore = create(
         });
       },
 
+      /**
+       * Return the active environment's variables as an object.
+       */
+      getActiveEnvVars: () => {
+        const state = get();
+        const env = state.environments.find(
+          (e) => e.id === state.activeEnvironment
+        );
+        return env ? env.variables : {};
+      },
+
+      /* ───────── Mock Actions ───────── */
+
+      addMock: (mock) => {
+        const entry = {
+          id: uid(),
+          method: mock.method || "GET",
+          path: mock.path || "/mock",
+          responseBody: mock.responseBody || "{}",
+          statusCode: mock.statusCode || 200,
+          latency: mock.latency || 200,
+          description: mock.description || "",
+        };
+        set((state) => ({
+          mocks: [...state.mocks, entry],
+        }));
+        return entry.id;
+      },
+
+      updateMock: (id, updates) =>
+        set((state) => ({
+          mocks: state.mocks.map((m) =>
+            m.id === id ? { ...m, ...updates } : m
+          ),
+        })),
+
+      deleteMock: (id) =>
+        set((state) => ({
+          mocks: state.mocks.filter((m) => m.id !== id),
+        })),
+
+      /**
+       * Find a matching mock for a given method + URL.
+       * URLs starting with "mock://" are matched against mock paths.
+       */
+      findMock: (method, url) => {
+        const state = get();
+        if (!url.startsWith("mock://")) return null;
+        const path = url.replace("mock://", "/");
+        return (
+          state.mocks.find(
+            (m) =>
+              m.method.toUpperCase() === method.toUpperCase() &&
+              m.path.toLowerCase() === path.toLowerCase()
+          ) || null
+        );
+      },
+
       /* ───────── UI State Actions ───────── */
 
       setSidebarTab: (tab) => set({ sidebarTab: tab }),
@@ -196,6 +336,7 @@ const useAppStore = create(
             favorites: state.favorites,
             environments: state.environments,
             activeEnvironment: state.activeEnvironment,
+            mocks: state.mocks,
           },
           null,
           2
@@ -211,6 +352,7 @@ const useAppStore = create(
             favorites: data.favorites || [],
             environments: data.environments || [],
             activeEnvironment: data.activeEnvironment || null,
+            mocks: data.mocks || [],
           });
           return true;
         } catch {
@@ -220,7 +362,18 @@ const useAppStore = create(
     }),
     {
       name: "apiforge-storage", // localStorage key
-      version: 1,
+      version: 2,
+      partialize: (state) => ({
+        // Persist everything except transient request state
+        collections: state.collections,
+        history: state.history,
+        favorites: state.favorites,
+        environments: state.environments,
+        activeEnvironment: state.activeEnvironment,
+        sidebarTab: state.sidebarTab,
+        darkMode: state.darkMode,
+        mocks: state.mocks,
+      }),
     }
   )
 );
@@ -229,7 +382,8 @@ const useAppStore = create(
 // RequestBuilder calls window.__addToHistory({ method, url, status, elapsed })
 // We wire that up here so it flows into our Zustand store.
 if (typeof window !== "undefined") {
-  window.__addToHistory = (...args) => useAppStore.getState().addToHistory(...args);
+  window.__addToHistory = (...args) =>
+    useAppStore.getState().addToHistory(...args);
 }
 
 export default useAppStore;

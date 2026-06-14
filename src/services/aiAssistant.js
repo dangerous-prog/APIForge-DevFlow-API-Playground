@@ -1,5 +1,8 @@
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
+/**
+ * Post-request: Analyze an API response and explain the endpoint.
+ */
 export async function describeEndpoint({ url, method, responseData, statusCode }) {
   const bodyPreview =
     typeof responseData === "object"
@@ -38,20 +41,70 @@ Return ONLY valid JSON, no markdown, no explanation.`;
   });
 
   const data = await response.json();
-  console.log("Groq response:", data);
 
   if (!response.ok) {
     throw new Error(`Groq API error: ${data.error?.message || response.status}`);
   }
 
   const raw = data.choices[0].message.content.trim();
-  console.log("Raw AI response:", raw);
-
   const cleaned = raw.replace(/```json|```/g, "").trim();
 
   try {
     return JSON.parse(cleaned);
   } catch {
     return { summary: "Could not parse AI response", raw };
+  }
+}
+
+/**
+ * Pre-request: Analyze a URL before sending and suggest method, headers, body.
+ */
+export async function analyzeUrlBeforeSend(url) {
+  const prompt = `You are an API expert. Analyze this API endpoint URL and suggest the best way to call it.
+
+URL: ${url}
+
+Respond in JSON with exactly this structure:
+{
+  "method": "GET or POST or PUT etc",
+  "description": "One sentence explaining what this endpoint likely does",
+  "suggestedHeaders": [
+    {"key": "Accept", "value": "application/json"}
+  ],
+  "suggestedBody": null,
+  "suggestedParams": [],
+  "tips": ["Any useful tips for this API"]
+}
+
+If the URL looks like it needs a request body (like a POST endpoint), include a sample JSON body as a string in "suggestedBody".
+For suggestedParams, provide an array of {"key": "...", "value": "..."} objects for likely query parameters.
+Return ONLY valid JSON, no markdown, no explanation.`;
+
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${GROQ_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      max_tokens: 800,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(`Groq API error: ${data.error?.message || response.status}`);
+  }
+
+  const raw = data.choices[0].message.content.trim();
+  const cleaned = raw.replace(/```json|```/g, "").trim();
+
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    return { description: "Could not parse AI suggestion", raw };
   }
 }

@@ -13,8 +13,12 @@ import {
   Check,
   Edit2,
   Search,
+  Server,
+  FileText,
 } from "lucide-react";
 import useAppStore from "../../store/useAppStore";
+import MockManager from "../MockManager";
+import DocsGenerator from "../DocsGenerator";
 import "./Sidebar.css";
 
 /* ─── Method badge color mapping ─── */
@@ -51,10 +55,13 @@ function Sidebar({ onLoadRequest }) {
     toggleFavorite,
   } = useAppStore();
 
+  const [docsCollection, setDocsCollection] = useState(null);
+
   const tabs = [
     { key: "collections", label: "Collections", icon: FolderOpen },
     { key: "history", label: "History", icon: Clock },
     { key: "environments", label: "Env", icon: Globe },
+    { key: "mocks", label: "Mocks", icon: Server },
   ];
 
   return (
@@ -86,6 +93,7 @@ function Sidebar({ onLoadRequest }) {
             favorites={favorites}
             toggleFavorite={toggleFavorite}
             onLoadRequest={onLoadRequest}
+            onOpenDocs={setDocsCollection}
           />
         )}
         {sidebarTab === "history" && (
@@ -109,7 +117,16 @@ function Sidebar({ onLoadRequest }) {
             renameEnvironment={renameEnvironment}
           />
         )}
+        {sidebarTab === "mocks" && <MockManager />}
       </div>
+
+      {/* Docs Generator Overlay */}
+      {docsCollection && (
+        <DocsGenerator
+          collection={docsCollection}
+          onClose={() => setDocsCollection(null)}
+        />
+      )}
     </aside>
   );
 }
@@ -126,6 +143,7 @@ function CollectionsPanel({
   favorites,
   toggleFavorite,
   onLoadRequest,
+  onOpenDocs,
 }) {
   const [newName, setNewName] = useState("");
   const [showInput, setShowInput] = useState(false);
@@ -201,6 +219,7 @@ function CollectionsPanel({
               favorites={favorites}
               toggleFavorite={toggleFavorite}
               onLoadRequest={onLoadRequest}
+              onOpenDocs={onOpenDocs}
             />
           ))}
         </div>
@@ -219,6 +238,7 @@ function CollectionItem({
   favorites,
   toggleFavorite,
   onLoadRequest,
+  onOpenDocs,
 }) {
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState(collection.name);
@@ -251,6 +271,16 @@ function CollectionItem({
         )}
         <span className="collection-count">{collection.requests.length}</span>
         <div className="collection-actions" onClick={(e) => e.stopPropagation()}>
+          <button
+            className="icon-btn-tiny"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenDocs(collection);
+            }}
+            title="Generate Docs"
+          >
+            <FileText size={12} />
+          </button>
           <button
             className="icon-btn-tiny"
             onClick={() => {
@@ -424,7 +454,7 @@ function HistoryPanel({
                   }}
                 >
                   {favorites.includes(entry.id) ? (
-                    <Star size={12} fill="#f59e0b" color="#f59e0b" />
+                     <Star size={12} fill="#f59e0b" color="#f59e0b" />
                   ) : (
                     <StarOff size={12} />
                   )}

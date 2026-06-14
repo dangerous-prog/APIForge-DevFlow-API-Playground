@@ -1,0 +1,600 @@
+/* ===== Request Builder ===== */
+
+.rb-root {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  background: var(--bg-deep);
+  min-height: 100%;
+}
+
+/* ── URL Bar ── */
+.rb-url-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.rb-method-select {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+  font-family: var(--font-mono);
+  transition: border-color var(--transition-fast);
+}
+
+.rb-method-select:focus {
+  border-color: var(--accent);
+}
+
+.rb-url-input {
+  flex: 1;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  outline: none;
+  font-family: var(--font-mono);
+  transition: border-color var(--transition-fast);
+}
+
+.rb-url-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.rb-ai-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.15));
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: #a78bfa;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.rb-ai-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(99, 102, 241, 0.25));
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.rb-ai-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rb-send-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.rb-send-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+  box-shadow: 0 0 20px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+.rb-send-btn:disabled {
+  background: rgba(34, 197, 94, 0.3);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ── Env Bar ── */
+.rb-env-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.rb-env-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6366f1;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(99, 102, 241, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.rb-env-select {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+}
+
+.rb-env-hint {
+  font-size: 11px;
+  color: var(--text-dimmed);
+  margin-left: auto;
+}
+
+/* ── AI Auto-Fill Suggestion ── */
+.rb-ai-suggestion {
+  background: var(--bg-main);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  animation: fadeInUp 0.3s ease;
+}
+
+.rb-ai-suggestion-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #a78bfa;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.rb-ai-dismiss {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.rb-ai-dismiss:hover {
+  color: var(--error);
+}
+
+.rb-ai-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.rb-ai-chip {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+}
+
+.rb-ai-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.rb-ai-apply {
+  margin-top: 12px;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: #a78bfa;
+  padding: 8px 20px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.rb-ai-apply:hover {
+  background: rgba(139, 92, 246, 0.25);
+}
+
+/* ── Tabs ── */
+.rb-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  gap: 2px;
+}
+
+.rb-tab {
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  text-transform: capitalize;
+  margin-bottom: -1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-fast);
+}
+
+.rb-tab:hover {
+  color: var(--text-secondary);
+}
+
+.rb-tab.active {
+  border-bottom-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.rb-tab-badge {
+  background: var(--accent-subtle);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  min-width: 18px;
+  text-align: center;
+}
+
+/* ── Tab Content ── */
+.rb-tab-content {
+  min-height: 100px;
+}
+
+/* ── Key-Value Editor (Params) ── */
+.rb-kv-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.rb-kv-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.rb-kv-check {
+  accent-color: var(--accent);
+}
+
+.rb-kv-input {
+  flex: 1;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.rb-kv-input:focus {
+  border-color: var(--accent);
+}
+
+.rb-kv-remove {
+  background: none;
+  border: none;
+  color: var(--error);
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background var(--transition-fast);
+}
+
+.rb-kv-remove:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.rb-kv-add {
+  align-self: flex-start;
+  background: var(--accent-subtle);
+  border: 1px solid var(--accent-border);
+  color: var(--accent);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: all var(--transition-fast);
+}
+
+.rb-kv-add:hover {
+  background: rgba(34, 197, 94, 0.15);
+}
+
+/* ── Auth Editor ── */
+.rb-auth-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 4px;
+}
+
+.rb-auth-type-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rb-auth-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.rb-auth-select {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+}
+
+.rb-auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rb-auth-input {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font-mono);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.rb-auth-input:focus {
+  border-color: var(--accent);
+}
+
+.rb-auth-hint {
+  font-size: 11px;
+  color: var(--text-dimmed);
+  font-family: var(--font-mono);
+}
+
+.rb-auth-apikey-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.rb-auth-addto {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rb-auth-addto-options {
+  display: flex;
+  gap: 16px;
+}
+
+.rb-auth-radio {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.rb-auth-radio input {
+  accent-color: var(--accent);
+}
+
+.rb-auth-none {
+  padding: 20px;
+  color: var(--text-dimmed);
+  font-size: 13px;
+  text-align: center;
+  background: var(--bg-main);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border);
+}
+
+/* ── Response Section ── */
+.rb-response-section {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.rb-response-label {
+  font-size: 11px;
+  color: var(--text-dimmed);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+/* ── Code Snippets ── */
+.rb-snippets {
+  margin-top: 16px;
+  background: var(--bg-main);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.rb-snippets-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.rb-snippets-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.rb-snippet-tab {
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.rb-snippet-tab:hover {
+  color: var(--text-secondary);
+}
+
+.rb-snippet-tab.active {
+  background: var(--accent-subtle);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.rb-copy-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.rb-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.rb-snippet-code {
+  margin: 0;
+  padding: 16px;
+  color: #86efac;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* ── AI Describe Button ── */
+.rb-ai-describe-btn {
+  margin-top: 12px;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: #a78bfa;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--transition-fast);
+}
+
+.rb-ai-describe-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.25));
+}
+
+.rb-ai-describe-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ── AI Result ── */
+.rb-ai-result {
+  margin-top: 12px;
+  background: var(--bg-main);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  animation: fadeInUp 0.3s ease;
+}
+
+.rb-ai-result-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #a78bfa;
+  margin-bottom: 10px;
+}
+
+.rb-ai-result-summary {
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.rb-ai-result-purpose {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
+
+.rb-ai-result-section-title {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.rb-ai-result-field {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.rb-ai-result-suggestion {
+  font-size: 12px;
+  color: #6366f1;
+  margin-bottom: 4px;
+}
