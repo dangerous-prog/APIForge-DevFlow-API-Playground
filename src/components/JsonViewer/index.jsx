@@ -89,7 +89,20 @@ function JsonViewer({ data }) {
           dangerouslySetInnerHTML={{
             __html: colorizeJson(JSON.stringify(data, null, 2)),
           }}
-        />
+        >
+          <JsonView
+            src={data}
+            theme="a11y"
+            dark={true}
+            collapsed={2}
+            enableClipboard={false}
+            displaySize={true}
+            style={{
+              background: "transparent",
+              fontSize: "13px",
+            }}
+          />
+        </div>
       ) : (
         <pre
           style={{
