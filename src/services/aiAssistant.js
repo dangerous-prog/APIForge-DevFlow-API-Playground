@@ -1,4 +1,4 @@
-const ANTHROPIC_API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
 export async function describeEndpoint({ url, method, responseData, statusCode }) {
   const bodyPreview =
@@ -24,40 +24,33 @@ Respond in JSON with exactly this structure:
 
 Return ONLY valid JSON, no markdown, no explanation.`;
 
-  console.log("API Key loaded:", ANTHROPIC_API_KEY ? "YES" : "NO - MISSING");
-
-  const requestBody = {
-    model: "claude-sonnet-4-6",
-    max_tokens: 1000,
-    messages: [{ role: "user", content: prompt }],
-  };
-
-  console.log("Sending request to Anthropic...");
-
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": ANTHROPIC_API_KEY,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true",
+      "Authorization": `Bearer ${GROQ_API_KEY}`,
     },
-    body: JSON.stringify(requestBody),
+    body: JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      max_tokens: 1000,
+      messages: [{ role: "user", content: prompt }],
+    }),
   });
 
-  console.log("Response status:", response.status);
-
   const data = await response.json();
-  console.log("Response data:", data);
+  console.log("Groq response:", data);
 
   if (!response.ok) {
-    throw new Error(`API error: ${data.error?.message || response.status}`);
+    throw new Error(`Groq API error: ${data.error?.message || response.status}`);
   }
 
-  const raw = data.content[0].text.trim();
+  const raw = data.choices[0].message.content.trim();
+  console.log("Raw AI response:", raw);
+
+  const cleaned = raw.replace(/```json|```/g, "").trim();
 
   try {
-    return JSON.parse(raw);
+    return JSON.parse(cleaned);
   } catch {
     return { summary: "Could not parse AI response", raw };
   }
