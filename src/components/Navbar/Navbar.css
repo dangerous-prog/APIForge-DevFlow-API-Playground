@@ -1,0 +1,92 @@
+/* ===== Navbar ===== */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--navbar-height);
+  padding: 0 20px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* ── Left: Brand ── */
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+
+.navbar-brand:hover {
+  opacity: 0.85;
+}
+
+.navbar-logo-icon {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent), #10b981);
+  border-radius: var(--radius-md);
+  color: #fff;
+  box-shadow: var(--shadow-glow);
+}
+
+.navbar-logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.navbar-logo-accent {
+  color: var(--accent);
+}
+
+/* ── Right: Actions ── */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.navbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.navbar-btn:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.navbar-btn-label {
+  display: inline;
+}
+
+@media (max-width: 640px) {
+  .navbar-btn-label {
+    display: none;
+  }
+}
