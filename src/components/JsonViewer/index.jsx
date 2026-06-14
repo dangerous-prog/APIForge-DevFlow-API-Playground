@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ReactJson from "react-json-view";
 
 function JsonViewer({ data }) {
   const [copied, setCopied] = useState(false);
@@ -27,6 +26,31 @@ function JsonViewer({ data }) {
 
   const isJson = typeof data === "object";
 
+  const colorizeJson = (json) => {
+    return json
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(
+        /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+\.?\d*([eE][+-]?\d+)?)/g,
+        (match) => {
+          let color = "#fbbf24"; // number
+          if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+              color = "#60a5fa"; // key
+            } else {
+              color = "#86efac"; // string
+            }
+          } else if (/true|false/.test(match)) {
+            color = "#f97316"; // boolean
+          } else if (/null/.test(match)) {
+            color = "#94a3b8"; // null
+          }
+          return `<span style="color:${color}">${match}</span>`;
+        }
+      );
+  };
+
   return (
     <div style={{ position: "relative" }}>
       <button
@@ -49,19 +73,21 @@ function JsonViewer({ data }) {
       </button>
 
       {isJson ? (
-        <ReactJson
-          src={data}
-          theme="monokai"
-          collapsed={2}
-          enableClipboard={false}
-          displayDataTypes={false}
-          displayObjectSize={true}
+        <pre
           style={{
             background: "#111827",
             padding: "16px",
             borderRadius: "8px",
             fontSize: "13px",
             fontFamily: "monospace",
+            overflowX: "auto",
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-all",
+            margin: 0,
+            lineHeight: 1.6,
+          }}
+          dangerouslySetInnerHTML={{
+            __html: colorizeJson(JSON.stringify(data, null, 2)),
           }}
         />
       ) : (
@@ -76,6 +102,7 @@ function JsonViewer({ data }) {
             overflowX: "auto",
             whiteSpace: "pre-wrap",
             wordBreak: "break-all",
+            margin: 0,
           }}
         >
           {String(data)}
