@@ -95,9 +95,9 @@ function Home() {
           </div>
 
           <h1 className="hero-title">
-            Test APIs <span className="hero-highlight">Faster.</span>
+            Debug APIs <span className="hero-highlight">Instantly.</span>
             <br />
-            <span className="hero-gradient-text">Without Postman.</span>
+            <span className="hero-gradient-text">Zero Friction.</span>
           </h1>
 
           <p className="hero-subtitle">
